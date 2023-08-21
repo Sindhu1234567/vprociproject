@@ -15,8 +15,8 @@ SNAP_REPO = 'vprofile-snapshot'
   NEXUSPORT = '8081'
   NEXUS_GRP_REPO = 'vpro-maven-group'
  NEXUS_LOGIN = 'nexuslogin'
- SONARSERVER = 'sonarserver'
- SONARSCANNER = 'sonarscanner'
+ SONAR_SERVER = 'sonarserver'
+ SONAR_SCANNER = 'sonarscanner'
     }
 
     stages {
@@ -42,7 +42,7 @@ SNAP_REPO = 'vprofile-snapshot'
                 scannerHome = tool "${SONARSCANNER}"
             }
             steps {
-               withSonarQubeEnv("${SONARSERVER}") {
+               withSonarQubeEnv("${SONAR_SERVER}") {
                    sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=vprofile \
                    -Dsonar.projectName=vprofile \
                    -Dsonar.projectVersion=1.0 \
