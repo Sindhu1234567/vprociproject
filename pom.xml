@@ -21,5 +21,10 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
       <scope>test</scope>  
     </dependency>  
   </dependencies>  
-  
-</project>  
+  <repositories>
+    <repository>
+      <id>${NEXUS_GRP_REPO}</id>
+      <url>http://${NEXUSIP}:${NEXUSPORT}/repository/${NEXUS_GRP_REPO}/</url>
+    </repository>
+  </repositories>
+  </project>  
