@@ -1,80 +1,46 @@
-ipeline {
-  agent any
-   tools {
-        maven 'MAVEN3'
-
+pipeline {
+    agent any
+    tools {
+        maven "MAVEN3"
+        jdk "OracleJDK8"
     }
-  environment {
-      IMAGE_NAME   = "sample-spring-app"
-      VERSION      = "${env.BUILD_ID}"
-      NEXUS_URL    = "13.232.106.86"
-      NEXUS_PASS     = Vadivelu@12345
-      GIT_BRANCH   = 'main'
-  }
-  options{
-            buildDiscarder(logRotator(numToKeepStr: '10', artifactNumToKeepStr: '10'))
-            skipDefaultCheckout()
-            disableConcurrentBuilds()
+    
+    environment {
+        SNAP_REPO = 'vprofile-snapshot'
+		NEXUS_USER = 'admin'
+		NEXUS_PASS = 'Vadivelu@12345'
+		RELEASE_REPO = 'vprofile-release'
+		CENTRAL_REPO = 'vpro-maven-central'
+		NEXUSIP = '13.232.106.86'
+		NEXUSPORT = '8081'
+		NEXUS_GRP_REPO = 'vpro-maven-group'
+        NEXUS_LOGIN = 'nexuslogin'
     }
 
-  stages {
-      stage("Cleanup  Workspace ") {
+    stages {
+        stage('Build'){
             steps {
-                println "${env.BRANCH_NAME}"
-                cleanWs()
-                //clean up tmp directory
-                dir("${env.WORKSPACE}@tmp") {
-                    deleteDir()
+                sh 'mvn -s settings.xml -DskipTests install'
+            }
+            post {
+                success {
+                    echo "Now Archiving."
+                    archiveArtifacts artifacts: '**/*.war'
                 }
-                // clean up script directory
-                dir("${env.WORKSPACE}@script") {
-                    deleteDir()
-                }
-                dir("${env.WORKSPACE}@script@tmp") {
-                    deleteDir()
-                }
-                step([$class: 'WsCleanup'])
             }
         }
-      stage('Clone') {
+
+        stage('Test'){
             steps {
-                // clone the code from Git
-                slackSend (color: '#FFFF00', message: "STARTED: Job: '${env.JOB_NAME} [${env.BUILD_NUMBER}]', (${env.BUILD_URL})")
-                git credentialsId: 'sreehari_a1', url: 'https://bitbucket.org/cloudzenix/app/src/master/'
+                sh 'mvn -s settings.xml test'
+            }
+
+        }
+
+        stage('Checkstyle Analysis'){
+            steps {
+                sh 'mvn -s settings.xml checkstyle:checkstyle'
             }
         }
-        stage('Build') {
-             steps {
-                sh "mvn clean package"
-
-              }
-            }
-        stage('sonarcodescan'){
-            steps {
-            withSonarQubeEnv('sonar') {
-              sh "mvn sonar:sonar"
-              }
-            } 
-         }
-        stage("Quality Gate"){
-           steps {
-          timeout(time: 1, unit: 'HOURS') {
-          }
-           }
-        }   
-       stage('push image'){
-          steps {
-
- 
-
-               sh '''
-                docker build -t ${IMAGE_NAME} . --build-arg CONT_INST="${CONT_INST}"
-                docker tag ${IMAGE_NAME} cloudzenix/docker-private-repo
-                docker login -u cloudzenix -p ${DOCKER_TOKEN}
-                docker push cloudzenix/docker-private-repo
-               '''
-
-           }
-        }
-      }
-       
+    }
+}
