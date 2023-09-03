@@ -2,7 +2,6 @@ pipeline {
     agent any
     tools {
         maven "MAVEN3"
-        jdk "OracleJDK8"
     }
     
     environment {
@@ -65,7 +64,7 @@ pipeline {
 stage('Build App Image') {
   steps {
     script {
-    dockerImage = docker.build(appregistry+":$BUILD_NUMBER", "./Docker-files/app/multistage/")
+    dockerImage = docker.build(appregistry+":$BUILD_NUMBER")
   }
  }
 }       
@@ -78,7 +77,7 @@ stage('Upload App Image') {
         }
       }
     }
-  }
+   }
  }
 
 
