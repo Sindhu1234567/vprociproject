@@ -5,7 +5,7 @@ FROM openjdk:8 AS BUILD_IMAGE
 RUN apt update && apt install maven -y
 
 # Clone the Git repository and build the application
-RUN git clone -b vp-docker https://github.com/Sindhu1234567/vprociproject.git
+RUN git clone -b main https://github.com/Sindhu1234567/vprociproject.git
 RUN cd vprociproject && mvn install
 
 # Use Tomcat 8 with Java 11 as the base image
