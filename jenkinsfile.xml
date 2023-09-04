@@ -71,11 +71,11 @@ pipeline {
        		}
             }
 	}
-            post {
+<!--             post {
                 success {
                     echo "Image Built Successfully"
                 }
-            }
+            } -->
         
         stage('Upload App Image') {
             steps {
@@ -86,11 +86,11 @@ pipeline {
                     }
                 }
             }
-            post {
+<!--             post {
                 success {
                     echo "Image Uploaded Successfully"
                 }
-            }
+            } -->
         }
     }
 }
