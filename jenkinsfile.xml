@@ -67,7 +67,7 @@ pipeline {
             steps {
                 script {
                     def buildId = env.BUILD_ID  // Get the Jenkins build ID
-                    dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER" . )
+                    dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "." )
        		}
             }
 	}
