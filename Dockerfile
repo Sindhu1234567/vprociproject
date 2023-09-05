@@ -3,8 +3,8 @@ RUN apt update && apt install maven -y
 RUN apt update && apt install git -y
 
 RUN git clone https://github.com/Sindhu1234567/vprociproject/
-RUN cd vprofile-project && git checkout docker && mvn install
-WORKDIR /path/to/vprofile-project
+RUN cd vprociproject && git checkout docker && mvn install
+WORKDIR /path/to/vprociproject
 RUN git checkout docker && mvn install
 
 
