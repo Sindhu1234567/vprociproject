@@ -63,14 +63,25 @@ pipeline {
             }
         }
 
-        stage('Build App Image') {
+stages {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    def buildId = env.BUILD_ID  // Get the Jenkins build ID
-                    dockerImage = docker.build( appRegistry + ":$BUILD_NUMBER", "./Dockerfile/main/vprociproject/" )
-       		}
+                    def appRegistry = "606273365714.dkr.ecr.ap-south-1.amazonaws.com/vprofileapp"
+                    def buildNumber = env.BUILD_NUMBER
+
+                    // Ensure you are in the correct directory
+                    dir("./Dockerfile/main/vprociproject/") {
+                        // Build the Docker image
+                        dockerImage = docker.build("${appRegistry}:${buildNumber}")
+
+                        // Push the Docker image to a registry (if needed)
+                        dockerImage.push()
+                    }
+                }
             }
-	}
+        }
+   
         stage('Upload App Image') {
             steps {
                 script {
