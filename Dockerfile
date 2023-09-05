@@ -2,7 +2,8 @@
 FROM openjdk:8 AS BUILD_IMAGE
 
 # Install Maven
-RUN apt update && apt install maven -y
+RUN mvn clean install
+RUN apt update && apt install maven=3.6.x -y
 
 # Clone the Git repository and build the application
 RUN git clone -b main https://github.com/Sindhu1234567/vprociproject.git
