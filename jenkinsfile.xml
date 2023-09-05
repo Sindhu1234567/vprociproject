@@ -77,7 +77,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry(vprofileRegistry, registryCredential) {
-                       sh "docker push ${appRegistry}:${buildNumber}
+                       sh "docker push ${appRegistry}:${buildNumber}"
                     }
                 }
             }
