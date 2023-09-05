@@ -68,15 +68,16 @@ pipeline {
                 script {
                     def appRegistry = "606273365714.dkr.ecr.ap-south-1.amazonaws.com/vprofileapp"
                     def buildNumber = env.BUILD_NUMBER
+                    sh "docker build -t ${appRegistry}:${buildNumber}"
 
                     // Ensure you are in the correct directory
-                    dir("./Dockerfile/main/vprociproject/") {
+<!--                     dir("./Dockerfile/main/vprociproject/") {
                         // Build the Docker image
                         dockerImage = docker.build("${appRegistry}:${buildNumber}")
 
                         // Push the Docker image to a registry (if needed)
                         dockerImage.push()
-                    }
+                    } -->
                 }
             }
         }
